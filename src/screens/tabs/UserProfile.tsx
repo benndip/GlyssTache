@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView,  Share as RNShare, Alert, StatusBar } from 'react-native'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProfileStackParamList } from '../../types/navigation'
 import { deviceHeight, deviceWidth } from '../../constants/sizes'
@@ -20,11 +20,10 @@ const UserProfile: React.FC<NavProps> = ({ navigation }) => {
 
     const {profile} = useProfile();
   
-
     const onShare = useCallback(async () => {
       try {
         const result = await RNShare.share({
-          message: messageToShare || profile.pseudo + ' est sur l’application Glyss',
+          message: messageToShare,
         });
 
         if (result.action === RNShare.sharedAction) {
@@ -52,6 +51,11 @@ const UserProfile: React.FC<NavProps> = ({ navigation }) => {
     const goToAddFriend = () => {
         navigation.navigate('AddFriend')
     }
+
+    useEffect(() => {
+      setMessageToShare(profile?.pseudo + ' est sur l’application Glyss');
+    }, [profile])
+    
 
   return (
     <View style={styles.container}>
